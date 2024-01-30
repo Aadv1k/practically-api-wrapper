@@ -2,6 +2,15 @@
 
 Unofficial api wrapper for [practically](https://www.practically.com) which is an OS used by many schools to publish assignments, report cards and lectures.
 
+- [Quickstart](#quickstart)
+- [Guide](#guide)
+  - [Session](#session)
+  - [Get User](#get-user)
+  - [Get Classrooms](#get-classrooms)
+  - [Get Assignments](#get-assignments)
+- [Recipes](#recipes)
+  - [Get all assignments that are due in the future](get-all-assignments-that-are-due-in-the-future)
+
 ## Quickstart
 
 ```python
@@ -50,7 +59,7 @@ user = prac.get_user()
 - `user.first_name`
 - `user.last_name`
 
-### Get Classroom
+### Get Classrooms
 
 A user can be enrolled in one or more classrooms.
 
