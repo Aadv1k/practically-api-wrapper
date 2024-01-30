@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from urllib.parse import urlparse, parse_qs
 import re
 
@@ -59,8 +59,10 @@ class Assignment:
 
     @property
     def attached_pdf_url(self):
-        url = self.soup.select_one('a[href*="/v1/studentweb/readpdf/"]')["href"]
-        id = Assignment.get_pdf_id_from_url(url)
+        url = self.soup.select_one('a[href*="/v1/studentweb/readpdf/"]')
+        if not url:
+            return None
+        id = Assignment.get_pdf_id_from_url(url["href"])
         return f"https://teach.practically.com/v1/files/shared/content/{id[:2]}/{id}/{id}.pdf"
 
 
@@ -71,8 +73,8 @@ class Assignments:
         self.__populate_with()
 
     def __populate_with(self):
-        for elem in self.soup.select("div.row:nth-child(2)"):
-            self.items.append(Assignment(str(elem)))
+        for child in self.soup.select("div > div > div.card.h-100 > div.card-body"):
+            self.items.append(Assignment(str(child)))
 
     def __getitem__(self, index):
         return self.items[index]
