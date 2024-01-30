@@ -1,13 +1,45 @@
-class Practically:
-    def __init__(self, username: str, password: str):
-        self.username: str = username
-        self.password: str = password
+import requests
+import os
 
-    def get_user(self):
+import utils
+
+class Practically:
+    def __init__(self, base_url = "https://teach.practically.com"):
+        self.base_url = base_url
+        self.session_id = None
+        self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0"
+
+    def create_session(self, username, password):
+        res = requests.post(
+            "https://teach.practically.com/v1/teacherapp_v1/loginWithPassword",
+            headers={
+                "User-Agent": self.user_agent
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            data={
+                "LoginID": username,
+                "Password": str_to_md5(password),
+                "IsWebRequest": "Y"
+            }
+        )
+
+        session_id = res.cookies.get("ci_session")
+        self.session_id = session_id
+        return None
+
+    def is_session_expired():
         pass
+
+    def __get_secure(self, url):
+        res = requests.get(f"{self.base_url}{url}", header={
+            "Cookie": f"ci_session={self.session_id}"
+        })
+        return res.text()
+
+    def get_user():
+        return User(self.__get_secure("/v1/studentweb/profile"))
 
     def create_session_from_env(self, username_var, password_var):
-        pass
-
-    def create_session(self, id=None):
-        pass
+        return self.create_session(os.getenv(username_var), os.getenv(password_var))
+        
+        
