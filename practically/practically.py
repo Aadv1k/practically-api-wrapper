@@ -5,6 +5,7 @@ import pickle
 
 from .api.user import User
 from .api.classrooms import Classrooms
+from .api.assignments import Assignments
 
 
 class Practically:
@@ -79,6 +80,11 @@ class Practically:
 
     def get_classrooms(self):
         return Classrooms(self.__get_secure("/v1/studentweb/myschool/classes"))
+
+    def get_assignments(self, classroom_id):
+        return Assignments(
+            self.__get_secure(f"/v1/studentweb/classdetail/{classroom_id}/assignments")
+        )
 
     def create_session_from_env(self, username_var, password_var):
         return self.create_session(os.getenv(username_var), os.getenv(password_var))
