@@ -1,0 +1,13 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+      - id: black
+
+  - repo: local
+    hooks:
+      - id: build-requirements
+        name: "Build requirements.txt"
+        entry: pip freeze > requirements.txt
+        language: system
+        types: [text]
