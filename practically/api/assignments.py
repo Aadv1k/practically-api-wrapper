@@ -1,14 +1,7 @@
 from bs4 import BeautifulSoup, Tag
 from urllib.parse import urlparse, parse_qs
 import re
-
-from practically.utils import parse_str_as_datestring
-
-pattern = re.compile(r"\s+")
-
-
-def str_clean(input_str):
-    return re.sub(pattern, " ", input_str)
+from datetime import datetime
 
 
 class Assignment:
@@ -22,30 +15,22 @@ class Assignment:
         )
         return title_element.text.strip() if title_element else None
 
+    def __parse_date_dirty(self, s):
+        return datetime.strptime(
+            re.sub(r"(\s+)|IST (\(.*\))", " ", s[s.find(":") + 1 :].strip()).strip(),
+            "%d %b %Y %I:%M %p",
+        )
+
     @property
     def start_time(self):
-        start_time_element = self.soup.select(
-            "div.col-xl-3:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)"
-        )
-        return (
-            parse_str_as_datestring(
-                str_clean(start_time_element[0].text[11 + 1 :].strip())
-            )
-            if start_time_element
-            else None
+        return self.__parse_date_dirty(
+            self.soup.select("div.mb-0.text-gray-800")[0].text
         )
 
     @property
     def end_time(self):
-        end_time_element = self.soup.select(
-            "div.col-xl-3:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3)"
-        )
-        return (
-            parse_str_as_datestring(
-                str_clean(end_time_element[0].text[9 + 1 :].strip())
-            )
-            if end_time_element
-            else None
+        return self.__parse_date_dirty(
+            self.soup.select("div.mb-0.text-gray-800")[1].text
         )
 
     def __str__(self):
