@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs
 import re
 
+from practically.utils import parse_str_as_datestring
+
 pattern = re.compile(r"\s+")
 
 
@@ -26,7 +28,9 @@ class Assignment:
             "div.col-xl-3:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)"
         )
         return (
-            str_clean(start_time_element[0].text[11 + 1 :].strip())
+            parse_str_as_datestring(
+                str_clean(start_time_element[0].text[11 + 1 :].strip())
+            )
             if start_time_element
             else None
         )
@@ -37,10 +41,15 @@ class Assignment:
             "div.col-xl-3:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3)"
         )
         return (
-            str_clean(end_time_element[0].text[9 + 1 :].strip())
+            parse_str_as_datestring(
+                str_clean(end_time_element[0].text[9 + 1 :].strip())
+            )
             if end_time_element
             else None
         )
+
+    def __str__(self):
+        return f"{self.title} starts at {self.start_time}"
 
     @staticmethod
     def get_pdf_id_from_url(url):
