@@ -1,4 +1,6 @@
 from dotenv import load_dotenv
+import pathlib
+
 load_dotenv()
 
 from practically.practically import Practically
@@ -6,9 +8,14 @@ from practically.practically import Practically
 p = Practically()
 
 def test_if_user_can_login():
-    #p.create_session_from_env("USERNAME", "PASSWORD")
-
-    p.session_id = "b14ef77393091fd4b8d9d0e4b53247ffa4dd7988"
+    p.create_session_from_env("USERNAME", "PASSWORD")
 
     user = p.get_user()
-    assert str(user) is not None
+    assert len(user.first_name) > 1
+
+def test_should_work_if_session_is_invalid():
+    p.session_id = "foobarbaz"
+    p.create_session_from_env("USERNAME", "PASSWORD")
+
+    user = p.get_user()
+    assert len(user.last_name) > 1
