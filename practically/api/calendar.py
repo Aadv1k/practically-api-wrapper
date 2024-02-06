@@ -18,7 +18,7 @@ class Calendar:
         for child in element.find_all("div", class_="card h-100"):
             title = child.find("div", class_="font-weight-bold text-uppercase mb-1 text-gray-800").text
             start_time, teacher_name = [x.text for x in child.find_all("div", class_="mb-0 text-gray-800")]
-            self.items.append(CalendarEntry(title=title, start_time=Assignments.parse_date(start_time.strip()), teacher_name=teacher_name))
+            self.items.append(CalendarEntry(title=title.strip(), start_time=Assignments.parse_date(start_time.strip()), teacher_name=teacher_name.strip()))
 
     def __getitem__(self, index):
         return self.items[index]
