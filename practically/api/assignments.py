@@ -15,6 +15,7 @@ class Assignment:
         )
         return title_element.text.strip() if title_element else None
 
+    @classmethod
     def __parse_date_dirty(self, s):
         return datetime.strptime(
             re.sub(r"(\s+)|IST (\(.*\))", " ", s[s.find(":") + 1 :].strip()).strip(),
@@ -23,13 +24,13 @@ class Assignment:
 
     @property
     def start_time(self):
-        return self.__parse_date_dirty(
+        return Assignments.__parse_date_dirty(
             self.soup.select("div.mb-0.text-gray-800")[0].text
         )
 
     @property
     def end_time(self):
-        return self.__parse_date_dirty(
+        return Assignments.__parse_date_dirty(
             self.soup.select("div.mb-0.text-gray-800")[1].text
         )
 

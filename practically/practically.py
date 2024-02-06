@@ -6,7 +6,7 @@ import pickle
 from .api.user import User
 from .api.classrooms import Classrooms
 from .api.assignments import Assignments
-
+from .api.calendar import Calendar
 
 class Practically:
     def __init__(
@@ -77,6 +77,10 @@ class Practically:
 
     def get_user(self):
         return User(self.__get_secure("/v1/studentweb/profile"))
+
+    def get_calendar(self, date: datetime.date) -> Calendar:
+        parsed_date = f"{date.year}{date.month}{date.day}"
+        return Calendar(self.__get_secure(f"/v1/studentweb/myschool/calender?date={parsed_date}"))
 
     def get_classrooms(self):
         return Classrooms(self.__get_secure("/v1/studentweb/myschool/classes"))
