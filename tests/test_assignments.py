@@ -7,7 +7,7 @@ from practically.practically import Practically
 
 p = Practically()
 p.create_session_from_env("USERNAME", "PASSWORD")
-id = p.get_classrooms()[0].id
+id = p.get_classrooms()[0].classroom_id
 
 
 def test_if_assignments_exist():

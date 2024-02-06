@@ -1,34 +1,40 @@
 from bs4 import BeautifulSoup
+from dataclasses import dataclass
+from practically.exceptions import *
 
+
+@dataclass
 class Classroom:
-    def __init__(self, html: str):
-        self.soup = BeautifulSoup(html, "html.parser")
-
-    @property
-    def name(self):
-        return self.soup.find("div", class_="font-weight-bold").text.strip() or None
-
-    @property
-    def owner(self):
-        return self.soup.find("div", class_="mb-0").text.strip() or None
-
-    @property
-    def id(self):
-        return self.soup.find("a")["href"].split("/").pop() or None
+    classroom_id: str
+    classroom_name: str
+    classroom_owner_name: str
 
 
 class Classrooms:
     def __init__(self, html: str):
         self.soup = BeautifulSoup(html, "html.parser")
-        self.items = []
-        self.__populate_with()
+        self._items = []
 
-    def __populate_with(self):
         for elem in self.soup.find_all("div", class_="col-xl-3 col-md-6 mb-4"):
-            self.items.append(Classroom(str(elem)))
+            try:
+                name_elem = elem.find("div", class_="font-weight-bold").text.strip()
+                owner_elem = elem.find("div", class_="mb-0").text.strip()
+                id_elem = elem.find("a")["href"].split("/").pop()
+
+                self._items.append(
+                    Classroom(
+                        classroom_id=id_elem,
+                        classroom_name=name_elem,
+                        classroom_owner_name=owner_elem,
+                    )
+                )
+            except AttributeError:
+                raise MalformedHTMLException(
+                    "Something went wrong when parsing HTML in Classrooms"
+                )
 
     def __getitem__(self, index):
-        return self.items[index]
+        return self._items[index]
 
     def __len__(self):
-        return len(self.items)
+        return len(self._items)

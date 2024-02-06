@@ -65,7 +65,7 @@ user = prac.get_user()
 ### Get Calendar
 
 ```python
-calendar = prac.get_calendar()
+calendar = prac.get_calendar(datetime.date(2023, 12, 12))
 ```
 
 Returns a collection of `CalendarEntry`
@@ -79,15 +79,15 @@ Returns a collection of `CalendarEntry`
 A user can be enrolled in one or more classrooms.
 
 ```python
-classrooms = prac.get_classrooms()
-print(len(classrooms)) # __getitem__ and __len__ can be used
+c = prac.get_classrooms()
+print(len(c)) # __getitem__ and __len__ can be used
 ```
 
 A single clasroom looks like so
 
-- `classroom.name`
-- `classroom.owner`
-- `classroom.id`
+- `c.classroom_name`
+- `c.classroom_owner_name`
+- `c.classroom_id`
 
 ### Get Assignments
 
