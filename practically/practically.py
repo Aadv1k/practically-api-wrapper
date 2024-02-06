@@ -78,7 +78,7 @@ class Practically:
     def get_user(self):
         return User(self.__get_secure("/v1/studentweb/profile"))
 
-    def get_calendar(self, date: datetime.date) -> Calendar:
+    def get_calendar(self, date) -> Calendar:
         parsed_date = f"{date.year}{date.month}{date.day}"
         return Calendar(self.__get_secure(f"/v1/studentweb/myschool/calender?date={parsed_date}"))
 
@@ -91,4 +91,7 @@ class Practically:
         )
 
     def create_session_from_env(self, username_var, password_var):
-        return self.create_session(os.getenv(username_var), os.getenv(password_var))
+        u, p = os.getenv(username_var), os.getenv(password_var)
+        if not u or not p:
+            raise ValueError(f"Expected {username_var} and {password_var} to be in the enviorment, but didn't find")
+        return self.create_session(u, p)
