@@ -1,5 +1,7 @@
 # Practically API Wrapper
 
+[![Test Practically API Wrapper](https://github.com/Aadv1k/practically-api-wrapper/actions/workflows/python-app.yml/badge.svg)](https://github.com/Aadv1k/practically-api-wrapper/actions/workflows/python-app.yml)
+
 Unofficial api wrapper for [practically](https://www.practically.com) which is an OS used by many schools to publish assignments, report cards and lectures.
 
 - [Quickstart](#quickstart)
