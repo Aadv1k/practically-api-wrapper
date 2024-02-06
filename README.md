@@ -6,10 +6,11 @@ Unofficial api wrapper for [practically](https://www.practically.com) which is a
 - [Guide](#guide)
   - [Session](#session)
   - [Get User](#get-user)
+  - [Get Calendar](#get-calendar)
   - [Get Classrooms](#get-classrooms)
   - [Get Assignments](#get-assignments)
 - [Recipes](#recipes)
-  - [Get all assignments that are due in the future](get-all-assignments-that-are-due-in-the-future)
+  - [Get all assignments that are due in the future](#get-all-assignments-that-are-due-in-the-future)
 
 ## Quickstart
 
@@ -59,6 +60,18 @@ user = prac.get_user()
 - `user.first_name`
 - `user.last_name`
 
+### Get Calendar
+
+```python
+calendar = prac.get_calendar()
+```
+
+Returns a collection of `CalendarEntry`
+
+- `calendar[0].teacher_name`
+- `calendar[0].start_time`
+- `calendar[0].title`
+
 ### Get Classrooms
 
 A user can be enrolled in one or more classrooms.
@@ -88,7 +101,7 @@ A single clasroom looks like so
 - `assignment.title`: string
 - `assignment.start_time`: returns a datetime object
 - `assignment.end_time`: returns a datetime object
-- `assignment.attached_pdf_url`: return the link to the pdf CDN
+- `assignment.pdf_url`: return the link to the pdf CDN
 
 ## Recipes
 
