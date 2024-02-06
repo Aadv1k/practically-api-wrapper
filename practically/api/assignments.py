@@ -1,66 +1,47 @@
-from bs4 import BeautifulSoup, Tag
-from urllib.parse import urlparse, parse_qs
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 import re
 from datetime import datetime
+from dataclasses import dataclass
 
-
+@dataclass
 class Assignment:
-    def __init__(self, html):
-        self.soup = BeautifulSoup(html, "html.parser")
-
-    @property
-    def title(self):
-        title_element = self.soup.find(
-            "div", class_="font-weight-bold text-uppercase mb-1 text-gray-800"
-        )
-        return title_element.text.strip() if title_element else None
-
-    @classmethod
-    def __parse_date_dirty(self, s):
-        return datetime.strptime(
-            re.sub(r"(\s+)|IST (\(.*\))", " ", s[s.find(":") + 1 :].strip()).strip(),
-            "%d %b %Y %I:%M %p",
-        )
-
-    @property
-    def start_time(self):
-        return Assignments.__parse_date_dirty(
-            self.soup.select("div.mb-0.text-gray-800")[0].text
-        )
-
-    @property
-    def end_time(self):
-        return Assignments.__parse_date_dirty(
-            self.soup.select("div.mb-0.text-gray-800")[1].text
-        )
-
-    def __str__(self):
-        return f"{self.title} starts at {self.start_time}"
-
-    @staticmethod
-    def get_pdf_id_from_url(url):
-        parsed_url = urlparse(url)
-        id = parsed_url.path.split("/").pop()
-        return id
-
-    @property
-    def attached_pdf_url(self):
-        url = self.soup.select_one('a[href*="/v1/studentweb/readpdf/"]')
-        if not url:
-            return None
-        id = Assignment.get_pdf_id_from_url(url["href"])
-        return f"https://teach.practically.com/v1/files/shared/content/{id[:2]}/{id}/{id}.pdf"
-
+    title: str
+    pdf_url: str
+    start_time: datetime
+    end_time: datetime
 
 class Assignments:
     def __init__(self, html: str):
         self.soup = BeautifulSoup(html, "html.parser")
         self.items = []
-        self.__populate_with()
 
-    def __populate_with(self):
-        for child in self.soup.select("div > div > div.card.h-100 > div.card-body"):
-            self.items.append(Assignment(str(child)))
+        for card in self.soup.select("div > div > div.card.h-100"):
+            title_element = card.find("div", class_="font-weight-bold text-uppercase mb-1 text-gray-800")
+            title = title_element.text.strip() if title_element else None
+
+            pdf_url_element = card.select_one('a[href*="/v1/studentweb/readpdf/"]')
+            pdf_url = self.get_pdf_url(pdf_url_element["href"]) if pdf_url_element else None
+
+            start_time, end_time = [self.parse_date(date) for date in card.select("div.mb-0.text-gray-800")]
+
+            assignment = Assignment(title=title, pdf_url=pdf_url, start_time=start_time, end_time=end_time)
+            self.items.append(assignment)
+
+    @staticmethod
+    def get_pdf_url(url):
+        parsed_url = urlparse(url)
+        id = parsed_url.path.split("/").pop()
+        return f"https://teach.practically.com/v1/files/shared/content/{id[:2]}/{id}/{id}.pdf"
+
+    @staticmethod
+    def parse_date(date: str):
+        cleaned_date = re.sub(r"(\s+)|IST (\(.*\))", " ", date.text.strip())
+        formatted_date = datetime.strptime(cleaned_date, "%d %b %Y %I:%M %p")
+        return formatted_date
+
+    def __str__(self):
+        return "\n".join([f"{item.title} starts at {item.start_time}" for item in self.items])
 
     def __getitem__(self, index):
         return self.items[index]
