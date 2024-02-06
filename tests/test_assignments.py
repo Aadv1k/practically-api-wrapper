@@ -25,4 +25,4 @@ def test_if_assignment_has_fluff():
     assert a.title is not None
     assert a.start_time is not None
     assert a.end_time is not None
-    assert a.attached_pdf_url is not None
+    assert a.pdf_url is not None
