@@ -2,7 +2,7 @@
 
 [![Test Practically API Wrapper](https://github.com/Aadv1k/practically-api-wrapper/actions/workflows/python-app.yml/badge.svg)](https://github.com/Aadv1k/practically-api-wrapper/actions/workflows/python-app.yml)
 
-Unofficial api wrapper for [practically](https://www.practically.com) which is an OS used by many schools to publish assignments, report cards and lectures.
+**Unofficial** api wrapper for [practically](https://www.practically.com) which is an OS used by many schools to publish assignments, report cards and lectures.
 
 - [Quickstart](#quickstart)
 - [Guide](#guide)
@@ -61,6 +61,8 @@ user = prac.get_user()
 - `user.email`
 - `user.first_name`
 - `user.last_name`
+- `user.display_name`
+- `user.phone_number`
 
 ### Get Calendar
 
